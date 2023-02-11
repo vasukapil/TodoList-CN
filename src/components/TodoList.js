@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
@@ -12,20 +13,15 @@ function TodoList() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("https://jsonplaceholder.typicode.com/todos", {
-      method: "POST",
-      body: JSON.stringify({
-        title: newTodo,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setTodos([...todos, data]));
+    const newTodoItem = {
+      id: uuidv4(), // added new id using this package as it was deleting all the list items of newly added items as they were having same id.
+      title: newTodo,
+    };
+    setTodos([...todos, newTodoItem]);
   };
 
   const handleDelete = (id) => {
+    console.log(id);
     fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
       method: "DELETE",
     }).then(() => {
